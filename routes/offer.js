@@ -21,8 +21,30 @@ getUserByToken = (token) => {
    })
 }
 
-offerRoute.get("/list", (req, res) => {
-
+offerRoute.post("/list", (req, res) => {
+   const validOffers = [];
+   Offer.find().then((offers)=>{
+     offers.filter((offer)=>{
+       const rules = offer.target.split("and")
+       rules.forEach((rule)=>{
+         let ruleKey = {}
+         if(rule.includes(">")){
+            ruleKey = {key : rule.trim().split(">")[0].trim(),value : parseInt(rule.trim().split(">")[1])}
+            if(req.body[ruleKey.key] > ruleKey.value){
+               validOffers.push(offer)
+            }
+         }else{
+            ruleKey = {key : rule.trim().split("<")[0].trim(),value : parseInt(rule.trim().split("<")[1])}
+            if(req.body[ruleKey.key] < ruleKey.value){
+               validOffers.push(offer)
+            }
+         }
+       })
+     })
+     res.status(200).send(validOffers);
+   }).catch(()=>{
+      res.status(500).send("Internal Server Error")
+   })
 });
 
 offerRoute.post("/create", (req, res) => {
