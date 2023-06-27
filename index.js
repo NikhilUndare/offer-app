@@ -6,6 +6,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 const PORT = process.env.PORT || 8080 ;
 const userRoute = require('./routes/user')
+const offerRoute = require('./routes/offer')
 
 mongoose.connect('mongodb+srv://nikundare111:Nikhil@cluster0.qmkdjbw.mongodb.net/offer?retryWrites=true&w=majority')
     .then((response) => {
@@ -16,6 +17,7 @@ mongoose.connect('mongodb+srv://nikundare111:Nikhil@cluster0.qmkdjbw.mongodb.net
     })
 
 app.use("/user",userRoute);
+app.use("/offer",offerRoute);
     
 app.listen(PORT, ( ) => {
    console.log(`server is running on port ${PORT}`)
